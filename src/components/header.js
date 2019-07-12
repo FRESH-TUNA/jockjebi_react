@@ -1,13 +1,18 @@
 import React from 'react';
 import logo from '../img/logo.png';
-// import Auth from '../store/containers/auth'
 
 import { connect } from 'react-redux';
-import { obtainToken } from '../store/actions/auth';
+import { bindActionCreators } from 'redux';
+import * as auth from '../store/reducers/newauth';
 
 
 
 class Header extends React.Component {
+    constructor(props) {
+        super(props);
+        this.login = this.login.bind(this);
+    }
+
     render() {
         return (
             <div className="header">
@@ -19,7 +24,7 @@ class Header extends React.Component {
                     <div className="menu-section">
                         <h2 className="menu-item">스크랩한 족보</h2>
                         <h2 className="menu-item">족보 업로드</h2>
-                        <h2 className="menu-item" onClick={() => this.props.obtainToken({ username: 'rove', password: '2019openhack' })}>로그인</h2>
+                        <h2 className="menu-item" onClick={this.login}>로그인</h2>
                     </div>
                 </div>
 
@@ -59,20 +64,40 @@ class Header extends React.Component {
             </div >
         );
     }
+    async login() {
+        await this.props.Auth.obtainToken({ username: 'rove', password: '2019openhack' })
+        if(this.props.error === true)
+            console.log('error닷')
+        else 
+            console.log(this.props.username)
+    }
 }
 
+// const mapStateToProps = (state) => ({
+//     jwt: state.jwt,
+//     username: state.username,
+//     useruni: state.useruni,
+//     endpoints: state.endpoints,
+// });
 
-const mapStateToProps = (state) => ({
-    jwt: state.jwt,
-    username: state.username,
-    useruni: state.useruni,
-    endpoints: state.endpoints,
-});
+// const mapDispatchToProps = (dispatch) => ({
+//     obtainToken(context) {
+//         dispatch(obtainToken(context));
+//     }
+// });
 
-const mapDispatchToProps = (dispatch) => ({
-    obtainToken(context) {
-        dispatch(obtainToken(context));
-    }
-});
+// export default connect(mapStateToProps, mapDispatchToProps)(Header);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+
+
+export default connect(
+    (state) => ({
+        loading: state.pending,
+        error: state.error,
+        useruni: state.data.useruni,
+        username: state.data.username
+    }),
+    (dispatch) => ({
+        Auth: bindActionCreators(auth, dispatch)
+    })
+)(Header);

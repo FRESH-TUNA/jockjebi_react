@@ -19,8 +19,6 @@ const reducer = (state = initialState, action) => {
     switch (action.type) {
         case OBTAIN_TOKEN:
             let response = obtainToken(action.payload)
-            console.log(response.data)
-
             if (response.status == 201) {
                 return {
                     jwt: response.data.token,

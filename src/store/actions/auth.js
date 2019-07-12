@@ -12,9 +12,9 @@ export const obtainToken = (payload) => {
     return { type: OBTAIN_TOKEN, payload }
 }
 
-export const refreshToken = (payload) => {
-    return { type: REFRESH_TOKEN, payload }
-}
+// export const refreshToken = (payload) => {
+//     return { type: REFRESH_TOKEN, payload }
+// }
 
 // export function inspectToken(filter) {
 //     return { type: SET_VISIBILITY_FILTER, filter }

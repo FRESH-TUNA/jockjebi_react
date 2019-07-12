@@ -5,11 +5,15 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
 
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import reducer from './store/reducers/auth'
+import reducer from './store/reducers/newauth'
 
-const store = createStore(reducer);
+import ReduxThunk from 'redux-thunk';
+
+const store = createStore(reducer, applyMiddleware(ReduxThunk));
+
+
 
 
 ReactDOM.render((
