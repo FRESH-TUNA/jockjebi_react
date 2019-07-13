@@ -31,19 +31,17 @@ export function obtainToken(payload) {
         dispatch({ type: GET_POST_PENDING });
         // 요청을 시작합니다
         // 여기서 만든 promise 를 return 해줘야, 나중에 컴포넌트에서 호출 할 때 getPost().then(...) 을 할 수 있습니다
-        let response = await obtainTokenResponse(payload)
-        if (response.status === 200) {
-            // 요청이 성공했을경우, 서버 응답내용을 payload 로 설정하여 GET_POST_SUCCESS 액션을 디스패치합니다.
-
+        try {
+            const response = await obtainTokenResponse(payload)
             dispatch({
                 type: GET_POST_SUCCESS,
                 payload: {jwt: 'jwt ' + response.data.token, username: payload.username}
             })
         }
-        else {
+        catch(error) {
             dispatch({
                 type: GET_POST_FAILURE,
-                payload: response
+                payload: error.response.status,
             });
         }
     }
@@ -59,7 +57,6 @@ export default handleActions({
         };
     },
     [GET_POST_SUCCESS]: (state, action) => {
-        console.log('success')
         const {jwt, username} = action.payload
 
         return {
@@ -72,11 +69,11 @@ export default handleActions({
         };
     },
     [GET_POST_FAILURE]: (state, action) => {
-        console.log('failure')
         return {
             ...state,
             pending: false,
-            error: true
+            error: true,
+            status: action.payload
         }
     }
 }, initialState);

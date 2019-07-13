@@ -1,17 +1,26 @@
 import React from 'react';
 import logo from '../img/logo.png';
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as auth from '../store/reducers/newauth';
-
+// import { connect } from 'react-redux';
+// import { bindActionCreators } from 'redux';
+import SigninModal from './signinmodal'
 
 
 class Header extends React.Component {
     constructor(props) {
         super(props);
-        this.login = this.login.bind(this);
+        this.state = {
+            signinModalState: false
+        }
+        this.changeSigninModalState = this.changeSigninModalState.bind(this);
     }
+
+    changeSigninModalState() {
+        if(this.state.signinModalState === false)
+            this.setState({signinModalState: true});
+        else
+            this.setState({signinModalState: false});
+    };
 
     render() {
         return (
@@ -24,10 +33,10 @@ class Header extends React.Component {
                     <div className="menu-section">
                         <h2 className="menu-item">스크랩한 족보</h2>
                         <h2 className="menu-item">족보 업로드</h2>
-                        <h2 className="menu-item" onClick={this.login}>로그인</h2>
+                        <h2 className="menu-item" onClick={this.changeSigninModalState}>로그인</h2>
                     </div>
                 </div>
-
+                {this.state.signinModalState && <SigninModal closeSigninModal = {this.changeSigninModalState}/>}
                 <style jsx>{`
             .logo {
                 height: 40px;
@@ -64,13 +73,6 @@ class Header extends React.Component {
             </div >
         );
     }
-    async login() {
-        await this.props.Auth.obtainToken({ username: 'rove', password: '2019openhack' })
-        if(this.props.error === true)
-            console.log('error닷')
-        else 
-            console.log(this.props.username)
-    }
 }
 
 // const mapStateToProps = (state) => ({
@@ -87,17 +89,15 @@ class Header extends React.Component {
 // });
 
 // export default connect(mapStateToProps, mapDispatchToProps)(Header);
-
-
-
-export default connect(
-    (state) => ({
-        loading: state.pending,
-        error: state.error,
-        useruni: state.data.useruni,
-        username: state.data.username
-    }),
-    (dispatch) => ({
-        Auth: bindActionCreators(auth, dispatch)
-    })
-)(Header);
+export default Header;
+// export default connect(
+//     (state) => ({
+//         loading: state.pending,
+//         error: state.error,
+//         useruni: state.data.useruni,
+//         username: state.data.username
+//     }),
+//     (dispatch) => ({
+//         Auth: bindActionCreators(auth, dispatch)
+//     })
+// )(Header);
