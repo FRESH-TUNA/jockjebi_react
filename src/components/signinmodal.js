@@ -1,6 +1,6 @@
 import React from 'react';
 
-import * as auth from '../store/reducers/newauth';
+import * as Auth from '../store/actions/newauth';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 class SigninModal extends React.Component {
@@ -13,7 +13,6 @@ class SigninModal extends React.Component {
         this.usernameHandleChange = this.usernameHandleChange.bind(this)
         this.passwordHandleChange = this.passwordHandleChange.bind(this)
         this.login = this.login.bind(this)
-        console.log(this.login)
     }
     usernameHandleChange(event) {
         this.setState({username: event.target.value});
@@ -26,8 +25,12 @@ class SigninModal extends React.Component {
 
         if(this.props.error === true)
             console.log('일시적 서버 오류입니다 관리자한테 call')
-        else
-            console.log(this.state.username) 
+        else {
+            this.props.afterSuccessLogin();
+        }
+    }
+    blockPropagate(event) {
+        event.stopPropagation();
     }
     render() {
         return (
@@ -112,9 +115,6 @@ class SigninModal extends React.Component {
             </div>
         )
     }
-    blockPropagate(event) {
-        event.stopPropagation();
-    }
 }
 
 export default connect(
@@ -123,14 +123,30 @@ export default connect(
         error: state.error,
     }),
     (dispatch) => ({
-        Auth: bindActionCreators(auth, dispatch)
+        Auth: bindActionCreators(Auth, dispatch)
     })
 )(SigninModal);
 
 
-// export default SigninModal;
 // const mapDispatchToProps = (dispatch) => ({
 //     obtainToken(context) { dispatch(obtainToken(context)) }
 // });
 
 // export default connect(mapDispatchToProps)(SigninModal);
+
+
+
+// const mapStateToProps = (state) => ({
+//     jwt: state.jwt,
+//     username: state.username,
+//     useruni: state.useruni,
+//     endpoints: state.endpoints,
+// });
+
+// const mapDispatchToProps = (dispatch) => ({
+//     obtainToken(context) {
+//         dispatch(obtainToken(context));
+//     }
+// });
+
+// export default connect(mapStateToProps, mapDispatchToProps)(Header);

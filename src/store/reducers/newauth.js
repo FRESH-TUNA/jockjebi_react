@@ -1,14 +1,11 @@
+
 import { handleActions } from 'redux-actions';
-import axios from 'axios';
-axios.defaults.baseURL = 'http://localhost:8000'
+import {OBTAIN_TOKEN_PENDING, OBTAIN_TOKEN_SUCCESS, OBTAIN_TOKEN_FAILURE} from '../actions/newauth'
 
-const GET_POST_PENDING = 'GET_POST_PENDING';
-const GET_POST_SUCCESS = 'GET_POST_SUCCESS';
-const GET_POST_FAILURE = 'GET_POST_FAILURE';
-
-const initialState = {
+export const initialState = {
     pending: false,
     error: false,
+    isLogin: false,
     data: {
         jwt: localStorage.getItem('t'),
         username: localStorage.getItem('username'),
@@ -20,55 +17,28 @@ const initialState = {
     }
 };
 
-
-function obtainTokenResponse(payload) {
-    return axios.post(initialState.data.endpoints.obtainJWT, payload)
-}
-
-export function obtainToken(payload) {
-    return async dispatch => {
-        // 먼저, 요청이 시작했다는것을 알립니다
-        dispatch({ type: GET_POST_PENDING });
-        // 요청을 시작합니다
-        // 여기서 만든 promise 를 return 해줘야, 나중에 컴포넌트에서 호출 할 때 getPost().then(...) 을 할 수 있습니다
-        try {
-            const response = await obtainTokenResponse(payload)
-            dispatch({
-                type: GET_POST_SUCCESS,
-                payload: {jwt: 'jwt ' + response.data.token, username: payload.username}
-            })
-        }
-        catch(error) {
-            dispatch({
-                type: GET_POST_FAILURE,
-                payload: error.response.status,
-            });
-        }
-    }
-}
-
-
 export default handleActions({
-    [GET_POST_PENDING]: (state, action) => {
+    [OBTAIN_TOKEN_PENDING]: (state, action) => {
         return {
             ...state,
             pending: true,
             error: false
         };
     },
-    [GET_POST_SUCCESS]: (state, action) => {
+    [OBTAIN_TOKEN_SUCCESS]: (state, action) => {
         const {jwt, username} = action.payload
 
         return {
             ...state,
             pending: false,
+            isLogin: true,
             data: {
                 ...state.data,
                 jwt, username
             }
         };
     },
-    [GET_POST_FAILURE]: (state, action) => {
+    [OBTAIN_TOKEN_FAILURE]: (state, action) => {
         return {
             ...state,
             pending: false,
@@ -77,3 +47,4 @@ export default handleActions({
         }
     }
 }, initialState);
+

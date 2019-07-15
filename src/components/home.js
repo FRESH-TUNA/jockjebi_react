@@ -22,7 +22,7 @@ function App() {
                                type="text"/>
                     </div>
                     <div className="needpad" style={{paddingTop:'20px'}}>
-                        <button class="searchBeginButton"
+                        <button className="searchBeginButton"
                                style={{borderRadius:'10px', width:'200px', height:'50px', fontSize: '18px', color:'white', backgroundColor: '#d0c9fd'}}>
                             <b>족보 검색하기</b>
                         </button>

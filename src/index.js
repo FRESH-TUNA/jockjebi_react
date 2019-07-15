@@ -5,16 +5,20 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
 
-import { createStore, applyMiddleware } from 'redux';
+import { combineReducers, createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import reducer from './store/reducers/newauth'
+
+import newauth from './store/reducers/newauth'
+import post from './store/reducers/post'
 
 import ReduxThunk from 'redux-thunk';
 
-const store = createStore(reducer, applyMiddleware(ReduxThunk));
+const rootReducer = combineReducers({
+  newauth,
+  post,
+});
 
-
-
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 ReactDOM.render((
   <Provider store={store}>
